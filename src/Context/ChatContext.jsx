@@ -1,70 +1,48 @@
-import React, { createContext, useState, useContext, useCallback } from "react";
-import { generateAIResponse } from "../services/AIServices"; // Import AI function
+import React, { createContext, useState, useContext } from 'react';
+import { generateAIResponse } from '../services/AiServices';
 
 const ChatContext = createContext();
 
+// Custom hook for using chat context
+export const useChat = () => {
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error('useChat must be used within a ChatProvider');
+  }
+  return context;
+};
+
 export const ChatProvider = ({ children }) => {
-  const [messages, setMessages] = useState([
-    { id: 1, type: "ai", text: "Ask me anything..." },
-  ]);
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const addMessage = useCallback(async (text) => {
-    const userMessage = {
-      id: Date.now(),
-      type: "user",
-      text,
-    };
-
-    setMessages((prev) => [...prev, userMessage]); // Add user input first
-
+  const addMessage = async (userInput) => {
     try {
-      const aiResponseText = await generateAIResponse(text);
-      const aiResponse = {
-        id: Date.now() + 1,
-        type: "ai",
-        text: aiResponseText,
+      setIsLoading(true);
+      const userMessage = {
+        type: 'text',
+        content: userInput,
+        timestamp: new Date().toISOString()
       };
+      
+      setMessages(prev => [...prev, userMessage]);
 
-      setMessages((prev) => [...prev, aiResponse]); // Append AI response
+      const aiResponse = await generateAIResponse(userInput);
+      setMessages(prev => [...prev, aiResponse]);
     } catch (error) {
-      console.error("Error fetching AI response:", error);
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  };
 
-  const editMessage = useCallback(async (id, newText) => {
-    setMessages((prev) => {
-      const index = prev.findIndex((msg) => msg.id === id);
-      if (index === -1) return prev; // If not found, return original messages
-
-      const updatedMessages = prev.slice(0, index + 1);
-      updatedMessages[index] = { ...updatedMessages[index], text: newText };
-
-      return updatedMessages; // Remove old responses
-    });
-
-    try {
-      const newAiResponseText = await generateAIResponse(newText);
-      const newAiResponse = {
-        id: Date.now() + 1,
-        type: "ai",
-        text: newAiResponseText,
-      };
-
-      setMessages((prev) => [...prev, newAiResponse]); // Add new AI response
-    } catch (error) {
-      console.error("Error fetching AI response:", error);
-    }
-  }, []);
-
-  const clearChat = useCallback(() => {
-    setMessages([{ id: 1, type: "ai", text: "Ask me anything..." }]);
-  }, []);
+  const clearMessages = () => {
+    setMessages([]);
+  };
 
   return (
-    <ChatContext.Provider value={{ messages, addMessage, editMessage, clearChat, setMessages }}>
+    <ChatContext.Provider value={{ messages, addMessage, clearMessages, isLoading }}>
       {children}
     </ChatContext.Provider>
   );
 };
-
-export const useChat = () => useContext(ChatContext);
