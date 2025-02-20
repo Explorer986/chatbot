@@ -50,3 +50,29 @@ textarea {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@layer utilities {
+  .prose-sm {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  
+  .prose-sm code {
+    font-size: 0.75rem;
+  }
+  
+  .prose-sm pre {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+  }
+}
+
+/* Ensure code blocks don't overflow on mobile */
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
