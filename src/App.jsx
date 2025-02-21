@@ -4,17 +4,15 @@ import ChatInterface from "./Components/ChatInterface/ChatInterface";
 import Navbar from "./Components/Navbar/Navbar";
 import './styles/animations.css';
 
-function App() {
+const App = () => {
   return (
     <ChatProvider>
-      <div className="min-h-screen animate-gradient">
+      <div className="min-h-screen bg-gray-900 pb-32">
         <Navbar />
-        <div className="h-[calc(100vh-4rem)] overflow-hidden">
-          <ChatInterface />
-        </div>
+        <ChatInterface />
       </div>
     </ChatProvider>
   );
-}
+};
 
 export default App;

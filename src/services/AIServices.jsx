@@ -75,8 +75,6 @@ export const generateAIResponse = async (userMessage) => {
       const content = data.choices[0].message.content;
       const formattedContent = fixTableFormatting(content);
 
-      console.log("AI response content:", formattedContent);
-
       // Validate markdown structure
       try {
         marked.parse(formattedContent);
@@ -104,7 +102,76 @@ export const generateAIResponse = async (userMessage) => {
     }
 };
 
-// Helper function to check if the response is valid markdown
+export const generateStreamResponse = async (userMessage) => {
+    try {
+      if (!userMessage?.trim()) {
+        throw new Error("Message cannot be empty");
+      }
+
+      const systemPrompt = `Please structure your responses using proper markdown:
+      - Use # for main headings, ## for subheadings
+      - Use \`\`\` with language specification for code blocks
+      - For tables, use the following format exactly:
+        | Header1 | Header2 |
+        |---------|---------|
+        | Cell1   | Cell2   |
+        Make sure there are no spaces between table rows and separator lines.
+      - Use * or - for bullet points
+      - Use 1. 2. 3. for numbered lists
+      - Use > for quotes
+      - Use **text** for bold and *text* for italic`;
+
+      const response = await fetch(import.meta.env.VITE_LLAMA_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_LLAMA_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            { 
+              role: "system", 
+              content: systemPrompt
+            },
+            { 
+              role: "user", 
+              content: userMessage
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 2000,
+          stream: true // Enable streaming
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return response;
+
+    } catch (error) {
+      console.error("Error in AI response generation:", error);
+      throw error;
+    }
+};
+
+// Helper function to fix table formatting in streaming chunks
+export const fixStreamingChunk = (chunk) => {
+  // Fix table formatting in the chunk
+  return chunk.replace(
+    /\| (.+) \| (.+) \| \|[-|\s]+\| [-|\s]+\|/g,
+    (match, header1, header2) => {
+      return `| ${header1} | ${header2} |\n|---------|---------|`
+    }
+  ).replace(
+    /\| (.+) \| (.+) \|(?!\n\|[-])/g,
+    (match, col1, col2) => `| ${col1} | ${col2} |`
+  );
+};
+
+// Helper function to validate markdown
 export const isValidMarkdown = (content) => {
   try {
     marked.parse(content);

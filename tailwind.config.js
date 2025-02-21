@@ -19,33 +19,52 @@ export default {
         }
       },
       maxWidth: {
-        'chat-input': '60%',
+        'chat-input': {
+          'DEFAULT': '90%', // Mobile width
+          'sm': '90%',
+          'md': '80%',
+          'lg': '75%'  // Adjusted laptop width
+        },
+        'chat-area': {
+          'DEFAULT': '100%', // Full width on mobile
+          'sm': '90%',
+          'md': '80%',
+          'lg': '75%'  // Matching laptop width
+        }
       },
       typography: {
         DEFAULT: {
           css: {
-            maxWidth: '100%',
+            maxWidth: {
+              'DEFAULT': '75%',
+              'sm': '90%',
+              'md': '90%',
+              'lg': '90%'
+            },
             overflowWrap: 'break-word',
             wordWrap: 'break-word',
             hyphens: 'auto',
             table: {
-              width: '100%',
+              width: '90%',
               tableLayout: 'fixed',
               borderCollapse: 'collapse',
               overflowX: 'auto',
               display: 'table', // Changed from 'block' to 'table'
               '& td, & th': {
                 width: 'auto',
-                minWidth: '100px',
+                minWidth: 'auto',
                 wordBreak: 'break-word'
-              }
+              }, 
+              padding: '0.75rem 1rem',
+              border: '1px solid #4b5563',
+              borderRadius: '0.5rem',
             },
             'thead th': {
               width: 'auto',
               backgroundColor: '#374151',
               color: '#e5e7eb',
               fontWeight: '600',
-              textAlign: 'left'
+              textAlign: 'center'
             },
             'tbody td': {
               width: 'auto',

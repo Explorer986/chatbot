@@ -8,8 +8,8 @@ const ChatInterface = () => {
 
   return (
     <div className="flex flex-col h-[calc(100dvh-4rem)] sm:h-[calc(100vh-4rem)]">
-      <div className="flex-1 overflow-y-auto overflow-x-hidden pb-32 sm:pb-36">
-        <div className="w-full max-w-[90%] sm:max-w-[85%] md:max-w-[80%] lg:max-w-[75%] mx-auto">
+      <div className="flex-1 overflow-y-auto">
+        <div className="w-full px-4 sm:px-0 sm:w-11/12 md:w-10/12 lg:w-9/12 mx-auto">
           {messages.map((message, index) => (
             <ChatMessage
               key={`${index}-${message.timestamp}`}
@@ -19,7 +19,11 @@ const ChatInterface = () => {
           ))}
         </div>
       </div>
-      <ChatInput />
+      <div className="w-full">
+        <div className="max-w-chat-input mx-auto">
+          <ChatInput />
+        </div>
+      </div>
     </div>
   );
 };

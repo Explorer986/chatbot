@@ -15,9 +15,9 @@ const ChatInput = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-gradient-to-t from-custom-navbar to-transparent 
-                    pb-4 sm:pb-6 lg:pb-8 pt-4 sm:pt-6">
-      <div className="max-w-chat-input mx-auto">
+    <div className="w-full bg-gradient-to-t from-custom-navbar to-transparent 
+                    pb-4 sm:pb-6 lg:pb-8 pt-4 sm:pt-6 fixed bottom-0 left-0">
+      <div className="max-w-chat-input mx-auto px-4">
         <form onSubmit={handleSubmit} className="relative group">
           <textarea
             value={input}
