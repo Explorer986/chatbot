@@ -14,12 +14,17 @@ export const ChatProvider = ({ children }) => {
       
       for (const line of lines) {
         if (line.startsWith('data: ')) {
-          const jsonStr = line.replace('data: ', '');
+          const jsonStr = line.replace('data: ', '').trim();
           if (jsonStr === '[DONE]') continue;
           
-          const jsonData = JSON.parse(jsonStr);
-          const chunkContent = jsonData.choices[0]?.delta?.content || '';
-          content += chunkContent;
+          try {
+            const jsonData = JSON.parse(jsonStr);
+            const chunkContent = jsonData.choices?.[0]?.delta?.content || '';
+            content += chunkContent;
+          } catch (jsonError) {
+            console.warn('Invalid JSON in chunk:', jsonStr);
+            continue; // Skip invalid JSON chunks
+          }
         }
       }
       return content;

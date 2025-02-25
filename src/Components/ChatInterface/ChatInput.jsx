@@ -9,8 +9,8 @@ const ChatInput = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (input.trim() && !isLoading) {
-      await addMessage(input.trim());
       setInput('');
+      await addMessage(input.trim());
     }
   };
 
