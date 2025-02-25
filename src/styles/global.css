@@ -36,6 +36,37 @@ body {
   border-radius: 4px;
 }
 
+/* Hide scrollbar but keep functionality */
+.overflow-y-auto {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Hide scrollbar but allow scrolling */
+
+/* Only show scrollbar on hover if needed */
+.overflow-y-auto:hover {
+  scrollbar-width: thin;
+}
+
+.overflow-y-auto:hover::-webkit-scrollbar {
+  display: block;
+  width: 4px;
+}
+
+.overflow-y-auto:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.3);
+  border-radius: 20px;
+}
+
 /* Fix for iOS input shadows */
 input,
 textarea {
